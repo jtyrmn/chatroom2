@@ -5,8 +5,11 @@ router.get('/', (req, res) => {
     res.json(users);
 });
 
+//our "database" of users
 const users = [];
 
+//go to /users/login to log into a user
+//post request must contain a JSON with "username" and "password"
 router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -39,10 +42,13 @@ router.post('/logout', (req, res) => {
     }
 })
 
+// GET request to user/signup is irrelevant
 router.get('/signup', (req, res) => {
     res.send('signup page');
 });
 
+//go to /user/signup to create a new user
+//post request must contain a JSON with "username" and "password"
 router.post('/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;

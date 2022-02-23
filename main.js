@@ -11,6 +11,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(session({secret: "very secret secret!"}));
 
+//basic login. Displays username + password (security is not a concern yet)
 app.get('/', function(req, res){
     if(req.session.user != undefined){
         res.send(`welcome back ${req.session.user.username}. Your password is ${req.session.user.password}`);
@@ -19,6 +20,7 @@ app.get('/', function(req, res){
     }
 });
 
+//user route deals with everything logging in, logging out, etc
 app.use('/user/', user);
 
 app.listen(3001, () => {
