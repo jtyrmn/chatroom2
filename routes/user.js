@@ -14,7 +14,7 @@ router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     if(!username || !password){
-        res.status(404).send('wrong data, loser');
+        res.status(404).send('wrong data');
         return;
     }
 
@@ -53,7 +53,7 @@ router.post('/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     if(!username || !password){
-        res.status(404).send('wrong data, loser');
+        res.status(404).send('wrong data');
         return;
     }
 

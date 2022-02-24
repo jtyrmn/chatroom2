@@ -4,7 +4,8 @@ const express = require('express');
 const app = express();
 port = 3001
 
-const user = require('./routes/user');
+const user_route = require('./routes/user');
+const room_route = require('./routes/room');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -21,7 +22,10 @@ app.get('/', function(req, res){
 });
 
 //user route deals with everything logging in, logging out, etc
-app.use('/user/', user);
+app.use('/user', user_route);
+
+//chatroom route deals with rooms and their messages
+app.use('/room', room_route);
 
 app.listen(3001, () => {
     console.log('server started');
