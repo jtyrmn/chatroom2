@@ -1,9 +1,10 @@
 const postgres = require('pg');
 
 const pool = new postgres.Pool({
-    user:'shared',
-    host:'localhost',
-    database:'node'
+    user:process.env.DB_USER,
+    host:process.env.DB_HOST,
+    database:process.env.DB,
+    password:process.env.DB_PASSWORD
 });
 
 pool.connect();

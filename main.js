@@ -1,8 +1,9 @@
+require('dotenv').config()
+
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const express = require('express');
 const app = express();
-port = 3001
 
 const user_route = require('./routes/user');
 const room_route = require('./routes/room');
@@ -27,6 +28,8 @@ app.use('/user', user_route);
 //chatroom route deals with rooms and their messages
 app.use('/room', room_route);
 
-app.listen(3001, () => {
-    console.log('server started');
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+    console.log('server started on port ', PORT);
 });
