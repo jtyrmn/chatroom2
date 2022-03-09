@@ -38,23 +38,33 @@ router.post('/login', (req, res) => {
         return;
     }
 
-    db.get_user_by_username(username)
-    .then((user) => {
-        if(!user){
-            res.status(404).send('user not found');
-            return;
-        }
+    // db.get_user_by_username(username)
+    // .then((user) => {
+    //     if(!user){
+    //         res.status(404).send('user not found');
+    //         return;
+    //     }
     
-        if(user.password !== password){
-            res.status(400).send('incorrect password');
-            return;
-        }
+    //     if(user.password !== password){
+    //         res.status(400).send('incorrect password');
+    //         return;
+    //     }
     
-        req.session.user = user;
+    //     req.session.user = user;
+    //     res.send('user logged in!');
+    // })
+    // .catch((err) => {
+    //     res.sendStatus(500);
+    // });
+    db.validate_user(username, password)
+    //if correct password
+    .then((valid_user) => {
+        req.session.user = valid_user;
         res.send('user logged in!');
     })
-    .catch((err) => {
-        res.sendStatus(500);
+    //if incorrect password
+    .catch(err => {
+        res.status(400).send(err.message);
     });
 });
 
