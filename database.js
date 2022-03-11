@@ -39,6 +39,10 @@ async function get_user_by_username(name) {
 //for logging in. resolves to the user if valid and undefined otherwise 
 async function validate_user(username, password) {
     const user = await get_user_by_username(username);
+    if(!user){
+        //username doesnt exist
+        throw new Error('username not found');
+    }
     const is_valid = await encryption.compare(password, user.password);
     if(is_valid){
         return user;

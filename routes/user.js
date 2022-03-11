@@ -17,9 +17,9 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     db.get_user_by_id(req.params.id)
         .then((user) => {
-            if(user){
+            if (user) {
                 res.json(user);
-            }else{
+            } else {
                 res.status(404).send('user not found');
             }
         })
@@ -33,46 +33,28 @@ router.get('/:id', (req, res) => {
 router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    if(!username || username == ''|| !password || password == ''){ //dTODO: make a function to validate usernames + passwords
+    if (!username || username == '' || !password || password == '') { //dTODO: make a function to validate usernames + passwords
         res.status(400).send('wrong data');
         return;
     }
 
-    // db.get_user_by_username(username)
-    // .then((user) => {
-    //     if(!user){
-    //         res.status(404).send('user not found');
-    //         return;
-    //     }
-    
-    //     if(user.password !== password){
-    //         res.status(400).send('incorrect password');
-    //         return;
-    //     }
-    
-    //     req.session.user = user;
-    //     res.send('user logged in!');
-    // })
-    // .catch((err) => {
-    //     res.sendStatus(500);
-    // });
     db.validate_user(username, password)
-    //if correct password
-    .then((valid_user) => {
-        req.session.user = valid_user;
-        res.send('user logged in!');
-    })
-    //if incorrect password
-    .catch(err => {
-        res.status(400).send(err.message);
-    });
+        //if correct password
+        .then((valid_user) => {
+            req.session.user = valid_user;
+            res.send('user logged in!');
+        })
+        //if incorrect password
+        .catch(err => {
+            res.status(400).send(err.message);
+        });
 });
 
 router.post('/logout', (req, res) => {
-    if(req.session.user){
+    if (req.session.user) {
         delete req.session.user;
         res.send('logged out');
-    }else{
+    } else {
         res.status(404).send('no user to log out of...');
     }
 });
@@ -87,7 +69,7 @@ router.get('/signup', (req, res) => {
 router.post('/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    if(!username || username == ''|| !password || password == ''){
+    if (!username || username == '' || !password || password == '') {
         res.status(400).send('wrong data');
         return;
     }
@@ -95,14 +77,14 @@ router.post('/signup', (req, res) => {
     db.insert_user(username, password).then((result) => {
         res.send('user successfully created')
     })
-    .catch((err) => {
-        if(err.code && err.code == "23505"){ // postgres error code for unique_violation
-            //aka the insert failed because username matched another user's username
-            res.status(404).send('username already in use');
-        }else{
-            res.status(500).send('user created failed due to server error');
-        }
-    });
+        .catch((err) => {
+            if (err.code && err.code == "23505") { // postgres error code for unique_violation
+                //aka the insert failed because username matched another user's username
+                res.status(404).send('username already in use');
+            } else {
+                res.status(500).send('user created failed due to server error');
+            }
+        });
 });
 
 module.exports = router;

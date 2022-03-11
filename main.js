@@ -11,7 +11,11 @@ const room_route = require('./routes/room');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(session({secret: "very secret secret!"}));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
 
 //basic login. Displays username + password (security is not a concern yet)
 app.get('/', function(req, res){
