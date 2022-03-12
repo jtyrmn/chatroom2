@@ -22,7 +22,7 @@ async function get_all_users() {
     try{
         return (await pool.query('select * from users')).rows;
     }catch(err){
-        throw new ServerError();
+        throw new ServerError(err.message);
     }
 }
 
@@ -34,20 +34,20 @@ async function get_user_by_id(id) {
         }
         return user[0];
     }catch(err){
-        throw new ServerError();
+        throw new ServerError(err);
     }
 }
 
 async function get_user_by_username(name) {
     try{
         const user = (await pool.query('select * from users where username = $1', [name])).rows;
-        
+
         if(user.length == 0){
             return undefined;
         }
         return user[0];
     }catch(err){
-        throw new ServerError();
+        throw new ServerError(err);
     }
 }
 
@@ -78,7 +78,7 @@ async function insert_user(username, password) {
         if(err.code = '23505'){ //error code for username already exists in database
             throw new UsernameInUseError(username);
         }
-        throw new ServerError();
+        throw new ServerError(err);
 
     }
 }

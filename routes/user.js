@@ -10,7 +10,7 @@ const UsernameInUseError = require('../error/api/username_in_use_err');
 const UserNotFoundError = require('../error/api/user_not_found_err');
 const ServerError = require('../error/server_err');
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     users.get_all_users()
         .then((rows) => {
             res.json(rows);
@@ -52,7 +52,7 @@ router.post('/login', (req, res, next) => {
     //if correct password
     .then((valid_user) => {
         if(!valid_user){
-            next(new InvalidPasswordError());
+            return next(new InvalidPasswordError());
         }
         req.session.user = valid_user;
         res.send('user logged in!');
