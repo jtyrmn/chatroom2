@@ -17,7 +17,8 @@ app.use(session({
     saveUninitialized: true
 }));
 
-//basic login. Displays username + password (security is not a concern yet)
+
+//basic login. Displays username + password (security is not a concern rn)
 app.get('/', function(req, res){
     if(req.session.user != undefined){
         res.send(`welcome back ${req.session.user.username}. Your password is ${req.session.user.password}`);
@@ -31,6 +32,15 @@ app.use('/user', user_route);
 
 //chatroom route deals with rooms and their messages
 app.use('/room', room_route);
+
+//error handling
+app.use((err, req, res, next) => {
+    console.log('caught error:\n',err);
+    res.status(err.status_code).json({
+        err: err.error_code,
+        msg: err.message
+    });
+});
 
 const PORT = process.env.PORT || 3001;
 
