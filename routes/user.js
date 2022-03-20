@@ -1,53 +1,66 @@
 const express = require('express');
 const router = express.Router();
 
-const db = require('../database');
+const users = require('../user_database');
+const ApiError = require('../error/api/api_err');
+const InvalidPasswordError = require('../error/api/invalid_password_err');
+const MalformedDataError = require('../error/api/malformed_data_err');
+const UnauthorizedUserError = require('../error/api/unathorized_user_err');
+const UsernameInUseError = require('../error/api/username_in_use_err');
+const UserNotFoundError = require('../error/api/user_not_found_err');
+const ServerError = require('../error/server_err');
 
-router.get('/', (req, res) => {
-    db.get_all_users()
+router.get('/', (req, res, next) => {
+    users.get_all_users()
         .then((rows) => {
             res.json(rows);
         })
         .catch((err) => {
-            //log error here if I had a proper logger
-            res.sendStatus(500);
+            next(err);
         })
 });
 
-router.get('/:id', (req, res) => {
-    db.get_user_by_id(req.params.id)
+router.get('/:id', (req, res, next) => {
+    users.get_user_by_id(req.params.id)
         .then((user) => {
             if (user) {
                 res.json(user);
             } else {
-                res.status(404).send('user not found');
+                throw new UserNotFoundError();
             }
         })
         .catch((err) => {
-            res.sendStatus(500);
+            next(err);
         })
 });
 
 //go to /users/login to log into a user
 //post request must contain a JSON with "username" and "password"
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
-    if (!username || username == '' || !password || password == '') { //dTODO: make a function to validate usernames + passwords
-        res.status(400).send('wrong data');
-        return;
+    
+    try{
+        if (!username || username == '' || !password || password == '') { //TODO: make a function to validate usernames + passwords
+            throw new MalformedDataError();
+        }
+    }catch(err){
+        next(err);
     }
 
-    db.validate_user(username, password)
-        //if correct password
-        .then((valid_user) => {
-            req.session.user = valid_user;
-            res.send('user logged in!');
-        })
-        //if incorrect password
-        .catch(err => {
-            res.status(400).send(err.message);
-        });
+    users.validate_user(username, password)
+    //if correct password
+    .then((valid_user) => {
+        if(!valid_user){
+            return next(new InvalidPasswordError());
+        }
+        req.session.user = valid_user;
+        res.send('user logged in!');
+    })
+    .catch(err => {
+        //err is either an invalid password error or server error 
+         next(err);
+    });
 });
 
 router.post('/logout', (req, res) => {
@@ -55,7 +68,7 @@ router.post('/logout', (req, res) => {
         delete req.session.user;
         res.send('logged out');
     } else {
-        res.status(404).send('no user to log out of...');
+        next(new UnauthorizedUserError());
     }
 });
 
@@ -66,25 +79,26 @@ router.get('/signup', (req, res) => {
 
 //go to /user/signup to create a new user
 //post request must contain a JSON with "username" and "password"
-router.post('/signup', (req, res) => {
+router.post('/signup', (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
-    if (!username || username == '' || !password || password == '') {
-        res.status(400).send('wrong data');
-        return;
-    }
 
-    db.insert_user(username, password).then((result) => {
-        res.send('user successfully created')
-    })
+    try{
+        if (!username || username == '' || !password || password == '') {
+            throw new MalformedDataError();
+        }
+
+        users.insert_user(username, password)
+        .then((result) => {
+            res.send('user successfully created')
+        })
         .catch((err) => {
-            if (err.code && err.code == "23505") { // postgres error code for unique_violation
-                //aka the insert failed because username matched another user's username
-                res.status(404).send('username already in use');
-            } else {
-                res.status(500).send('user created failed due to server error');
-            }
+            next(err);
         });
+        
+    }catch(err){
+        next(err);
+    }
 });
 
 module.exports = router;
