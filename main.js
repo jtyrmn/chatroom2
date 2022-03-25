@@ -19,13 +19,14 @@ app.use(session({
     saveUninitialized: true
 }));
 
-//basic login. Displays username + password (security is not a concern rn)
+app.use((req, res, next) => {
+    console.log(req.url);
+    next();
+});
+
 app.get('/', function(req, res){
-    if(req.session.user != undefined){
-        res.send(`welcome back ${req.session.user.username}. Your password is ${req.session.user.password}`);
-    }else{
-        res.send('unrecognized user');
-    }
+    console.log(`${req.url} called`);
+    res.send('test');
 });
 
 //user route deals with everything logging in, logging out, etc
