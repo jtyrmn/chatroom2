@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function Login({usernameState}) {
+function Login({usernameState, errorMessageState}) {
     const submit_login_data = () => {
         const username = document.getElementById("login_username").value;
         const password = document.getElementById("login_password").value;
@@ -13,23 +13,13 @@ function Login({usernameState}) {
         .then(response => {
             //this runs with a successful login
             usernameState(username);
+            //removing error messages
+            errorMessageState(undefined);
             console.log('successful login');
         })
         .catch(error => {
             //this runs with an unsuccessful login
-            if(error.response){
-                if(error.response.data.err === 'E_USERNOTFOUND'){
-                    //if invalid username
-                    console.log('invalid username');
-                }else if(error.response.data.err === 'E_WRONGPASSWORD'){
-                    //if invalid password
-                    console.log('invalid password');
-                }else if(error.response.data.err === 'E_DATAINVALID'){
-                    console.log('invalid data');
-                }
-            }else{
-                console.log('unknown error:', error);
-            }
+            errorMessageState(error.response ? error.response.data.msg : 'unknown error');
         });
     }
     return (

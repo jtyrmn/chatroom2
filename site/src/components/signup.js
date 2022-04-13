@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function Signup({usernameState}) {
+function Signup({usernameState, errorMessageState}) {
     const submit_signup_data = () => {
         const username = document.getElementById("signup_username").value;
         const password = document.getElementById("signup_password").value;
@@ -13,21 +13,13 @@ function Signup({usernameState}) {
         .then(response => {
             //this runs with a successful signup
             usernameState(username);
+            //removing error messages
+            errorMessageState(undefined);
             console.log('successful signup');
         })
         .catch(error => {
-            //this runs with an unsuccessful login
-            if(error.response){
-                console.log(error.response.data);
-                if(error.response.data.err === 'E_USERNAMETAKEN'){
-                    //if invalid username
-                    console.log('username taken');
-                }else if(error.response.data.err === 'E_DATAINVALID'){
-                    console.log('invalid data');
-                }
-            }else{
-                console.log('unknown error:', error);
-            }
+            //this runs with an unsuccessful signup
+            errorMessageState(error.response ? error.response.data.msg : 'unknown error');
         });
     }
     return (
