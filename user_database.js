@@ -3,7 +3,6 @@ const encryption = require('bcrypt');
 const assert = require('assert');
 const UsernameInUseError = require('./error/api/username_in_use_err');
 const UsernameNotFoundError = require('./error/api/user_not_found_err');
-const InvalidPasswordError = require('./error/api/invalid_password_err');
 const ServerError = require('./error/server_err');
 
 const salt_rounds = Number(process.env.PASSWORD_SALT_ROUNDS) || undefined;

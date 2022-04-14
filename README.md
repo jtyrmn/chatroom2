@@ -32,3 +32,5 @@ SESSION_SECRET= //some secret string
 
 # running
 to start the server, simply run `npm start`. The api can be accessed at `localhost:PORT` where PORT is defined in your .env file. View `/routes` for information on the api.
+
+to start the webpage server, cd into `site/` and run `npm start`. The React server is located at `localhost:3000`
