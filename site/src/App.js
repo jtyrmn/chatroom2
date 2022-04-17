@@ -1,12 +1,24 @@
 import './App.css';
 
+
+//components
 import Login from './components/login';
 import Signup from './components/signup';
 import ErrorBanner from './components/error_banner';
 import ChatLog from './components/chatlog';
 
-import { useEffect, useState } from 'react';
+//look at messages.js outside the /site directory for reference of this module
+//except we're communicating from client to server instead of vice versa
+
+//libraries
 import axios from 'axios';
+import {io} from 'socket.io-client';
+
+import { useEffect, useState } from 'react';
+
+//websocket stuff
+const socket = io('http://localhost:3000/');
+
 
 function DisplayUser({user}) {
   return (

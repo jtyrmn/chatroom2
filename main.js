@@ -4,9 +4,14 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const express = require('express');
 const app = express();
+const http = require('http').Server(app);
 
 const user_route = require('./routes/user');
 const room_route = require('./routes/room');
+
+const messages_manager = require('./messages');
+//init websocket functionality
+messages_manager.initialize(http);
 
 const error_logger = require('./log/error_logger')
 
@@ -40,6 +45,6 @@ app.use(error_logger);
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log('server started on port ', PORT);
 });
