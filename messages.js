@@ -14,6 +14,15 @@ const initialize = (http) => {
     io.on('connection', socket => {
         console.log(`${socket.id} connected`);
 
+        //when server recieves a message from a client
+        //note that names 'send_message' and such are from the client's perspective, not the server
+        socket.on('send_message', message => {
+            console.log(message);
+
+            //send message to every user
+            io.sockets.emit('recieve_message', message);
+        });
+
         //user disconnects
         socket.on('disconnect', () => {
             console.log(`${socket.id} disconnected`);

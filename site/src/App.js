@@ -5,7 +5,8 @@ import './App.css';
 import Login from './components/login';
 import Signup from './components/signup';
 import ErrorBanner from './components/error_banner';
-import ChatLog from './components/chatlog';
+import ChatBox from './components/ChatBox';
+import ChatLog from './components/ChatLog';
 
 //look at messages.js outside the /site directory for reference of this module
 //except we're communicating from client to server instead of vice versa
@@ -15,10 +16,6 @@ import axios from 'axios';
 import {io} from 'socket.io-client';
 
 import { useEffect, useState } from 'react';
-
-//websocket stuff
-const socket = io('http://localhost:3000/');
-
 
 function DisplayUser({user}) {
   return (
@@ -32,17 +29,23 @@ function App() {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState('...');
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [chatMessages, setChatMessages] = useState([]);
+  const [socket, setSocket] = useState(undefined);
+  const [messages, setMessages] = useState([]);
 
+  //creating the websocket connection
   useEffect(() => {
-    axios.get('/user')
-    .then(response => {
-      setUsers(response.data);
-    })
-    .catch(error => {
-      console.log(error);
+    const newSocket = io();
+
+    //also, for when we recieve messages
+    newSocket.on('recieve_message', message => {
+      setMessages((current_array) => current_array.concat(message));
     });
-  }, []);
+
+
+    setSocket(newSocket);
+
+    return () => newSocket.close();
+  }, [setSocket, setMessages]);
 
   return (
     <div>
@@ -50,9 +53,9 @@ function App() {
         <ErrorBanner message={errorMessage}/>
         <Login usernameState={setUsername} errorMessageState={setErrorMessage}/>
         <Signup usernameState={setUsername} errorMessageState={setErrorMessage}/>
-        {users.map(user => <li key = {user.id}><DisplayUser user={user} /></li>)}
-        <button onClick={() => setChatMessages(chatMessages.concat(Date.now()))}>add message</button>
-        <ChatLog messages={chatMessages}/>
+        <ChatBox socket={socket}/>
+        <ChatLog messages={messages}/>
+
     </div>
   );
 }
