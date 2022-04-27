@@ -3,12 +3,10 @@
 
 //mainly used for users messaging on platform
 
-let io = undefined;
-
 // call this at the beginning of the program to establish websocket behaviour
 // pass in the http server instance
 const initialize = (http) => {
-    io = require('socket.io')(http);
+    const io = require('socket.io')(http);
 
     //user connects
     io.on('connection', socket => {
@@ -30,6 +28,9 @@ const initialize = (http) => {
 
 
     });
+
+    //in order for other parts of the program to use this socket, return the instance
+    return io;
 }
 
 module.exports.initialize = initialize;

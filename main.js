@@ -11,9 +11,13 @@ const room_route = require('./routes/room');
 
 const messages_manager = require('./messages');
 //init websocket functionality
-messages_manager.initialize(http);
+const socket = messages_manager.initialize(http);
 
-const error_logger = require('./log/error_logger')
+//rooms 
+const room_manager_class = require('./room/room_manager');
+const room_manager = new room_manager_class(socket);
+
+const error_logger = require('./log/error_logger');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -30,7 +34,9 @@ app.use((req, res, next) => {
 });
 
 app.get('/', function(req, res){
-    console.log(`${req.url} called`);
+    console.log('pinging...')
+    room_manager.ping();
+
     res.send('test');
 });
 
