@@ -7,6 +7,7 @@ import Signup from './components/signup';
 import ErrorBanner from './components/error_banner';
 import ChatBox from './components/ChatBox';
 import ChatLog from './components/ChatLog';
+import RoomSelect from './components/RoomSelect';
 
 //look at messages.js outside the /site directory for reference of this module
 //except we're communicating from client to server instead of vice versa
@@ -55,6 +56,7 @@ function App() {
         <Signup usernameState={setUsername} errorMessageState={setErrorMessage}/>
         <ChatBox socket={socket}/>
         <ChatLog messages={messages}/>
+        <RoomSelect socket={socket}/>
 
     </div>
   );

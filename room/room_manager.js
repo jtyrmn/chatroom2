@@ -1,5 +1,4 @@
 const Room = require('./Room');
-const connections = require('../connection/messages').connections;
 
 //this class is a container for every currently active room. It will handle users switching in and out of different rooms
 
@@ -44,17 +43,6 @@ class RoomManager{
 
         const room = this._rooms.get(id);
         return {name: room.name, creator: room.creator, id: room.id};
-    }
-
-    //for debugging only
-    ping(){
-        console.log(connections);
-    }
-
-    //this function, given a socket ID and room ID, will switch the socket to that room
-    //returns true if the user is now connected to the new room, and something else otherwise
-    switch_to_room(socket_id, room_id){
-        
     }
 }
 

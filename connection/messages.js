@@ -1,4 +1,6 @@
 const Connection = require('./connection');
+const RoomManager = require('../room/room_manager');
+const MalformedDataError = require('../error/api/malformed_data_err');
 
 //this file handles all the bidirectional realtime websocket communication stuff
 //using socket.io wrapper
@@ -22,15 +24,32 @@ const initialize = (http) => {
         socket.on('send_message', message => {
             console.log(message);
 
-            //send message to every user
-            io.sockets.emit('recieve_message', message);
-
+            //send message to every user in the same room
+            const room = connections.get(socket.id).room;
+            console.log(room)
+            io.sockets.in(room).emit('recieve_message', message);
         });
 
         //user disconnects
         socket.on('disconnect', () => {
             console.log(`${socket.id} disconnected`);
             connections.delete(socket.id);
+        });
+
+        //user wishes to change rooms
+        socket.on('change_room', (room_id) => {
+            //RoomManager.switch_to_room(socket.id, room_id);
+
+            //this part, given a socket ID (socket.id) and room ID, will switch the socket to that room
+            //this was supposed to go into room_manager.js but I don't know how I can do that without creating a circular dependancy.
+            const connection = connections.get(socket.id);
+
+            socket.leave(connection.room);
+            socket.join(room_id)
+
+            connection.room  = room_id;
+            
+            console.log(socket.rooms)
         });
 
 

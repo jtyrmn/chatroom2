@@ -34,9 +34,6 @@ app.use((req, res, next) => {
 });
 
 app.get('/', function(req, res){
-    console.log('pinging...')
-    room_manager.ping();
-
     res.send('test');
 });
 
