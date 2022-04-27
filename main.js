@@ -9,7 +9,7 @@ const http = require('http').Server(app);
 const user_route = require('./routes/user');
 const room_route = require('./routes/room');
 
-const messages_manager = require('./messages');
+const messages_manager = require('./connection/messages');
 //init websocket functionality
 const socket = messages_manager.initialize(http);
 
