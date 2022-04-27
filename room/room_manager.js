@@ -1,13 +1,11 @@
 const Room = require('./Room');
+const connections = require('../connection/connection_manager');
 
 //this class is a container for every currently active room. It will handle users switching in and out of different rooms
 
 class RoomManager{
 
-    //pass in the websocket instance
-    constructor(socket){
-        this._socket = socket;
-
+    constructor(){
         // _rooms is a set of Room objects, indexed via room ID
         this._rooms = new Map();
     }
@@ -43,6 +41,18 @@ class RoomManager{
 
         const room = this._rooms.get(id);
         return {name: room.name, creator: room.creator, id: room.id};
+    }
+
+    //given a websocket, socket id, and room id, switch that socket id's user's room to room id
+    static switch_to_room(socket, socket_id, room_id){
+        const connection = connections.get(socket_id);
+
+        socket.leave(connection.room);
+        socket.join(room_id);
+
+        connection.room  = room_id;
+        
+        console.log(socket.rooms)
     }
 }
 

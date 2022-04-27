@@ -15,7 +15,7 @@ const socket = messages_manager.initialize(http);
 
 //rooms 
 const room_manager_class = require('./room/room_manager');
-const room_manager = new room_manager_class(socket);
+const room_manager = new room_manager_class();
 
 const error_logger = require('./log/error_logger');
 

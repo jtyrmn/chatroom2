@@ -34,6 +34,11 @@ class Room{
     getChats() {
         return this._log;
     }
+
+    //use this when posting a new message to room
+    addMessage(message){
+        this._log.push(message);  //TODO: dedicated message objects
+    }
 }
 
 module.exports = Room;
