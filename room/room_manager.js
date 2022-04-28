@@ -2,6 +2,7 @@ const Room = require('./Room');
 const connections = require('../connection/connection_manager');
 
 //this class is a container for every currently active room. It will handle users switching in and out of different rooms
+//global instance at bottom of file
 
 class RoomManager{
 
@@ -56,4 +57,11 @@ class RoomManager{
     }
 }
 
-module.exports = RoomManager
+//instance of RoomManager to be shared around the program
+const instance = new RoomManager();
+instance.create_room('bingus', 'no name')
+instance.create_room('gorbo', 'n/a')
+instance.create_room('glubglub', 'eek')
+
+module.exports = RoomManager;
+module.exports.instance = instance;

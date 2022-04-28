@@ -14,8 +14,7 @@ const messages_manager = require('./connection/messages');
 const socket = messages_manager.initialize(http);
 
 //rooms 
-const room_manager_class = require('./room/room_manager');
-const room_manager = new room_manager_class();
+const room_manager = require('./room/room_manager').instance;
 
 const error_logger = require('./log/error_logger');
 
@@ -41,7 +40,7 @@ app.get('/', function(req, res){
 app.use('/user', user_route);
 
 //chatroom route deals with rooms and their messages
-app.use('/room', room_route);
+app.use('/rooms', room_route);
 
 //error handling
 app.use(error_logger);
