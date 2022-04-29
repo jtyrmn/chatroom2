@@ -45,6 +45,16 @@ function App() {
     //whenever we attempt change rooms, the server will send us an acknowledgement of whether it was successful or not
     newSocket.on('change_room_ack', ack => {
       console.log('recieved ACK from server\n', ack);
+      //if the ACK was successful, it also contains the new room's chats
+      try{
+        if(!ack.success){
+          throw new Error();
+        }
+        setMessages(ack.chat_log)
+      }catch(e){
+        console.log(e);
+        setMessages([]);
+      }
     });
 
     setSocket(newSocket);

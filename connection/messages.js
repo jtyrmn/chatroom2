@@ -19,10 +19,12 @@ const initialize = (http) => {
         //when server recieves a message from a client
         //note that message names 'send_message' and such are from the client's perspective, not the server
         socket.on('send_message', message => {
-            console.log(message);
 
             //send message to every user in the same room
             const room = connections.get(socket.id).room;
+
+            //but while we're here, save message in room chat
+            room_manager.rooms.get(room).addMessage(message);
 
             io.sockets.in(room).emit('recieve_message', message);
         });

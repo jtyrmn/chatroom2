@@ -9,6 +9,9 @@ class RoomManager{
     constructor(){
         // _rooms is a set of Room objects, indexed via room ID
         this._rooms = new Map();
+
+        //the default or "null" room
+        this._rooms.set('default', new Room('server', 'default'))
     }
 
     get rooms(){
@@ -50,7 +53,7 @@ class RoomManager{
             const connection = connections.get(socket_id);
 
             //test if the room exists
-            if(room_id !== 'default' && !this._rooms.has(room_id)){
+            if(!this._rooms.has(room_id)){
                 throw new Error('room not found');
             }
 
@@ -59,10 +62,8 @@ class RoomManager{
 
             connection.room  = room_id;
             
-            console.log(socket.rooms);
-
-            //confirm the room switch was successful
-            socket.emit('change_room_ack', {success:true})
+            //confirm the room switch was successful as well as the room's chats
+            socket.emit('change_room_ack', {success:true, chat_log: this._rooms.get(room_id).getChats()})
         }catch(e){
             //if an error occured, send a message back to the client
             socket.emit('change_room_ack', {success:false, msg: e.message})
@@ -72,6 +73,7 @@ class RoomManager{
 
 //instance of RoomManager to be shared around the program
 const instance = new RoomManager();
+
 instance.create_room('bingus', 'no name')
 instance.create_room('gorbo', 'n/a')
 instance.create_room('glubglub', 'eek')
