@@ -22,10 +22,12 @@ function RoomSelect({socket}){
     }, []);
 
     return (
-        <div id="room-list">
+        <div id="room-list" className="room-list">
             Rooms
             {
-                rooms.map(room => <li key={room.room_id}> {room.room_id}:{room.creator_name}:{room.room_name} <button onClick={() => {change_room(room.room_id)}}>join</button></li>)
+                rooms.map(room => <li className="room-list-item" key={room.room_id}>
+                     {room.room_id}:{room.creator_name}:{room.room_name} <button onClick={() => {change_room(room.room_id)}}>join</button>
+                </li>)
             }
         </div>
     );

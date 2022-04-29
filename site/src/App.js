@@ -28,10 +28,11 @@ function DisplayUser({user}) {
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [username, setUsername] = useState('...');
+  const [username, setUsername] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [socket, setSocket] = useState(undefined);
   const [messages, setMessages] = useState([]);
+  const [room, setRoom] = useState('default');
 
   //creating the websocket connection
   useEffect(() => {
@@ -48,7 +49,7 @@ function App() {
       //if the ACK was successful, it also contains the new room's chats
       try{
         if(!ack.success){
-          throw new Error();
+          throw new Error(ack.msg ? ack.msg : 'unsuccessful ACK');
         }
         setMessages(ack.chat_log)
       }catch(e){
@@ -63,15 +64,19 @@ function App() {
   }, [setSocket, setMessages]);
 
   return (
-    <div>
-      <p>tetetetetetetttttttttttt hello {username}</p>
+    <div className='body'>
+      <p>{username ? 'welcome back ' + username : 'You are not signed in...'}</p>
+      {username ? <button onClick={() => setUsername(undefined)}>sign out</button> : undefined}
         <ErrorBanner message={errorMessage}/>
-        <Login usernameState={setUsername} errorMessageState={setErrorMessage}/>
-        <Signup usernameState={setUsername} errorMessageState={setErrorMessage}/>
-        <ChatBox socket={socket}/>
-        <ChatLog messages={messages}/>
-        <RoomSelect socket={socket}/>
-
+        <div className='body-left'>
+          <Login usernameState={setUsername} errorMessageState={setErrorMessage}/>
+          <Signup usernameState={setUsername} errorMessageState={setErrorMessage}/>
+        </div>
+        <div className='body-right'>
+          <RoomSelect socket={socket}/>
+          <ChatBox socket={socket}/>
+          <ChatLog messages={messages}/>
+        </div>
     </div>
   );
 }

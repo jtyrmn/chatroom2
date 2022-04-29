@@ -22,12 +22,13 @@ function Signup({usernameState, errorMessageState}) {
             errorMessageState(error.response ? error.response.data.msg : 'unknown error');
         });
     }
+    
     return (
     <div className="login-page">
-        wowowowwwowowowo user signup 
-       <input id="signup_username" type="text" placeholder="username" />
-       <input id="signup_password" type="password" placeholder="password" />
-         <button onClick={submit_signup_data}>Login</button>
+        Signup 
+       <br/><input id="signup_username" type="text" placeholder="username" />
+       <br/><input id="signup_password" type="password" placeholder="password" />
+       <br/><button onClick={submit_signup_data}>Login</button>
     </div>
   );
 }

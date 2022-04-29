@@ -1,7 +1,39 @@
+.body{
+  background-color: lightblue;
+}
+
+.body-left{
+  width: 50%;
+  float:left
+}
+
+.body-right{
+  width: 50%;
+  float:right
+}
+
+.login-page{
+  background-color: white;
+  padding: 1ch;
+}
+
 .error_banner{
   background-color: red;
 }
 
 .chatlog{
-  background-color: gainsboro;
+  background-color: lightgray;
+}
+
+.room-list{
+  background-color: lightgray;
+}
+
+.room-list-item{
+  border-style: groove;
+  background-color: white;
+}
+
+.chat-log{
+  border-style: groove;
 }

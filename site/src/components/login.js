@@ -24,10 +24,10 @@ function Login({usernameState, errorMessageState}) {
     }
     return (
     <div className="login-page">
-        wowowowwwowowowo user login 
-       <input id="login_username" type="text" placeholder="username" />
-       <input id="login_password" type="password" placeholder="password" />
-         <button onClick={submit_login_data}>Login</button>
+        Login
+       <br/><input id="login_username" type="text" placeholder="username" />
+       <br/><input id="login_password" type="password" placeholder="password" />
+        <br/><button onClick={submit_login_data}>Login</button>
     </div>
   );
 }

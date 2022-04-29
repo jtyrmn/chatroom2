@@ -62,7 +62,7 @@ class RoomManager{
 
             connection.room  = room_id;
             
-            //confirm the room switch was successful as well as the room's chats
+            //confirm the room switch was successful, send the room's chats
             socket.emit('change_room_ack', {success:true, chat_log: this._rooms.get(room_id).getChats()})
         }catch(e){
             //if an error occured, send a message back to the client

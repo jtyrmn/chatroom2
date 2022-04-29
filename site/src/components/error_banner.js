@@ -3,7 +3,7 @@
 
 function ErrorBanner({message}) {
     return (
-        <div class="error_banner">
+        <div className="error_banner">
             {message}
         </div>
     )
