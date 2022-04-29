@@ -1,5 +1,5 @@
 const Connection = require('./connection');
-const RoomManager = require('../room/room_manager');
+const room_manager = require('../room/room_manager').instance;
 
 const connections = require('./connection_manager');
 
@@ -35,11 +35,11 @@ const initialize = (http) => {
 
         //user wishes to change rooms
         socket.on('change_room', (room_id) => {
-            RoomManager.switch_to_room(socket, socket.id, room_id);
+            room_manager.switch_to_room(socket, socket.id, room_id);
         });
 
         //assign to default room when initialized
-        RoomManager.switch_to_room(socket, socket.id, 'default');
+        room_manager.switch_to_room(socket, socket.id, 'default');
     });
 
     //in order for other parts of the program to use this socket, return the instance

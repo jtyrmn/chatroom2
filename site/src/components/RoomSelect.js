@@ -11,7 +11,6 @@ function RoomSelect({socket}){
         socket.emit('change_room', id);
     }
 
-
     useEffect(() => {
         axios.get('/rooms')
         .then(response => {

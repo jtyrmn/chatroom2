@@ -45,15 +45,28 @@ class RoomManager{
     }
 
     //given a websocket, socket id, and room id, switch that socket id's user's room to room id
-    static switch_to_room(socket, socket_id, room_id){
-        const connection = connections.get(socket_id);
+    switch_to_room(socket, socket_id, room_id){
+        try{
+            const connection = connections.get(socket_id);
 
-        socket.leave(connection.room);
-        socket.join(room_id);
+            //test if the room exists
+            if(room_id !== 'default' && !this._rooms.has(room_id)){
+                throw new Error('room not found');
+            }
 
-        connection.room  = room_id;
-        
-        console.log(socket.rooms)
+            socket.leave(connection.room);
+            socket.join(room_id);
+
+            connection.room  = room_id;
+            
+            console.log(socket.rooms);
+
+            //confirm the room switch was successful
+            socket.emit('change_room_ack', {success:true})
+        }catch(e){
+            //if an error occured, send a message back to the client
+            socket.emit('change_room_ack', {success:false, msg: e.message})
+        }
     }
 }
 
